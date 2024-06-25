@@ -1,0 +1,14 @@
+.topbar{
+  
+    background-color: rgb(233, 233, 241);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+.heading{
+    color: black;
+}
+.loginbtn{
+    color: black;
+    font-weight: bold;
+}
