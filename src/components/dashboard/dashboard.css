@@ -25,16 +25,17 @@
   color: rgb(113, 126, 202);
   padding: 10px;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 0px;
 }
 
 .dropdown {
-  background-color: rgb(194, 209, 235);
+  background-color: rgb(242, 247, 252);
   font-weight: 700;
-  color: rgb(63, 53, 104);
+  color: rgb(13, 12, 13);
   font-size: 15px;
   padding: 5px;
+  border-radius: 10px;
 }
 
 .dashboard-summary {
