@@ -22,7 +22,7 @@ export default function Topbar({ onMenuClick }) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} className="heading">
             Data
           </Typography>
-          <Button color="inherit" className="loginbtn">Login</Button>
+          <Button color="inherit" className="loginbtn">Signin</Button>
         </Toolbar>
       </AppBar>
     </Box>
