@@ -82,7 +82,7 @@ overflow-x: auto;
 }
 
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   .cell-box {
     width: calc(100% / 4); 
    
