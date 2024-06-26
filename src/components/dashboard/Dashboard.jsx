@@ -28,18 +28,20 @@ function Dashboard() {
     try {
       const sheet = months.find((m) => m.name === month).sheet;
       const response = await fetch(
-        `https://sheetdb.io/api/v1/qcjoe0cyhflot?sheet=${sheet}`
+        `https://sheetdb.io/api/v1/slj3gtl0y7zz8?sheet=${sheet}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
+      console.log('Raw Data:', data); // Log raw data
       const normalizedData = data.map((row) => {
         const normalizedRow = {};
         for (let key in row) {
           const trimmedKey = key.trim();
           normalizedRow[trimmedKey] = row[key];
         }
+        console.log('Normalized Row:', normalizedRow); // Log normalized row
         return normalizedRow;
       });
       setSheetData(normalizedData);
@@ -49,13 +51,22 @@ function Dashboard() {
   };
 
   const filterItems = () => {
-    const completed = sheetData.filter(
-      (item) => item['Letter Outward Number'] || item['Action taken']
-    ).map((item) => ({
-      ...item,
-      inwardNumber: item['Inward Number'],
-      averageDays: calculateAverageDays(item['Inward Date'], item['Letter Outward Date']),
-    }));
+    const completed = sheetData
+      .filter((item) => item['Letter Outward Number'] || item['Action taken'])
+      .map((item) => {
+        const inwardDate = item['Inward Date'];
+        const outwardDate = item['Letter Outward Date']; // Verify this key
+        const averageDays = outwardDate ? calculateAverageDays(inwardDate, outwardDate) : 'NULL';
+
+        console.log(`Inward Date: ${inwardDate}, Outward Date: ${outwardDate}, Average Days: ${averageDays}`);
+
+        return {
+          ...item,
+          'Inward Number': item['Inward Number'],
+          averageDays,
+        };
+      });
+
     const pending = sheetData.filter(
       (item) => !item['Letter Outward Number'] && !item['Action taken']
     );
@@ -115,6 +126,8 @@ function Dashboard() {
     ? completedItems.filter(item => item['Inward Number'].includes(completedSearchTerm))
     : completedItems;
 
+  console.log('Filtered Completed Items:', filteredCompletedItems); // Log filtered completed items
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-containerhead">
@@ -135,7 +148,7 @@ function Dashboard() {
           </select>
         </div>
       </div>
-      
+
       <div className="dashboard-summary">
         <button className="summaryContainer">Total Items: {sheetData.length}</button>
         <button className="summaryContainer1">Pending Items: {pendingItems.length}</button>
@@ -143,27 +156,24 @@ function Dashboard() {
       </div>
       <div className="item-list">
         <div className="itemBar">
-        
-        <input
-          type="text"
-          placeholder="Search Pending Items by Inward Number"
-          value={pendingSearchTerm}
-          onChange={handlePendingSearchTermChange}
-          className="searchbydata"
-        />
-      
-      
+          <input
+            type="text"
+            placeholder="Search Pending Items by Inward Number"
+            value={pendingSearchTerm}
+            onChange={handlePendingSearchTermChange}
+            className="searchbydata"
+          />
           <h3>Pending Items (Inward Numbers)</h3>
           <CustomTable rows={filteredPendingItems} columns={pendingColumns} />
         </div>
-        <div className="itemBar" >
-        <input
-          type="text"
-          placeholder="Search Completed Items by Inward Number"
-          value={completedSearchTerm}
-          onChange={handleCompletedSearchTermChange}
-          className="searchbydata"
-        />
+        <div className="itemBar">
+          <input
+            type="text"
+            placeholder="Search Completed Items by Inward Number"
+            value={completedSearchTerm}
+            onChange={handleCompletedSearchTermChange}
+            className="searchbydata"
+          />
           <h3>Completed Items (Inward Numbers and Average Days)</h3>
           <CustomTable rows={filteredCompletedItems} columns={completedColumns} />
         </div>
